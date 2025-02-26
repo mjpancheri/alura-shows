@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7  # Use MySQL 5.7
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: owasp
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck: # ✅ This makes sure MySQL is ready before Tomcat starts
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
+
+  tomcat:
+    image: tomcat:8-jdk8  # Use Tomcat 8 with Java 8
+    container_name: tomcat
+    restart: always
+    environment:
+      - JAVA_OPTS=-Dspring.datasource.url=jdbc:mysql://mysql:3306/myappdb -Dspring.datasource.username=root -Dspring.datasource.password=root
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target/alura-shows-0.0.1-SNAPSHOT.war:/usr/local/tomcat/webapps/alura-shows.war  # Mount your WAR file
+    depends_on:
+      mysql:
+        condition: service_healthy  # ✅ Tomcat will wait for MySQL to be ready
+
+volumes:
+  mysql_data:
