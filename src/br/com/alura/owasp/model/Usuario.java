@@ -78,4 +78,16 @@ public class Usuario implements Serializable {
         this.nomeImagem = nomeImagem;
     }
 
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                ", nome='" + nome + '\'' +
+                ", nomeImagem='" + nomeImagem + '\'' +
+                ", roles=" + roles +
+                '}';
+    }
 }

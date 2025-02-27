@@ -40,5 +40,12 @@ public class Depoimento {
         this.mensagem = mensagem;
     }
 
-
+    @Override
+    public String toString() {
+        return "Depoimento{" +
+                "id=" + id +
+                ", titulo='" + titulo + '\'' +
+                ", mensagem='" + mensagem + '\'' +
+                '}';
+    }
 }

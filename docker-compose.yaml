@@ -23,6 +23,8 @@ services:
     restart: always
     environment:
       - JAVA_OPTS=-Dspring.datasource.url=jdbc:mysql://mysql:3306/myappdb -Dspring.datasource.username=root -Dspring.datasource.password=root
+    env_file:
+      - .env
     ports:
       - "8080:8080"
     volumes:
