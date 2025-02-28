@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @Controller
 @Transactional
@@ -28,10 +29,16 @@ public class UsuarioController {
     @Autowired
     private GoogleWebClient cliente;
 
+    private static final String SITE_KEY = System.getenv("RECAPTCHA_SITE");
+
     @RequestMapping("/usuario")
     public String usuario(Model model) {
         Usuario usuario = new Usuario();
         model.addAttribute("usuario", usuario);
+        model.addAttribute("siteKey", SITE_KEY);
+
+        Logger.getAnonymousLogger().info("siteKey: " + SITE_KEY);
+
         return "usuario";
     }
 

@@ -28,7 +28,7 @@
 									<input type="password" name="senha" id="senha" tabindex="2"
 										class="form-control" placeholder="Senha" required="required">
 								</div>
-								<div class="g-recaptcha" data-sitekey="6Lc00OQqAAAAAOsnbD2Sitsf0ldePQB3V_Vo3jfR"></div>
+								<div class="g-recaptcha" data-sitekey="${siteKey}"></div>
 								<div class="form-group" style="margin-top: 3%">
 									<div class="row">
 										<div class="col-sm-6 col-sm-offset-3">

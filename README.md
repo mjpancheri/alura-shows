@@ -19,3 +19,13 @@ Blog
 Registrar
 
 ![registrar](https://media.giphy.com/media/3ov9jNDmww9BGZR25q/giphy.gif)
+
+
+## Environment variables
+
+Define the `site_key` and `secret_key` variables for Google reCaptcha
+
+```properties
+RECAPTCHA_SITE=
+RECAPTCHA_SECRET=
+```
