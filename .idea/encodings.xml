@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/WebContent/WEB-INF/views/admin.jsp" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/WebContent/WEB-INF/views/adminLogado.jsp" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/WebContent/WEB-INF/views/cabecalho.jsp" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/WebContent/WEB-INF/views/depoimento.jsp" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/WebContent/WEB-INF/views/index.jsp" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/WebContent/WEB-INF/views/rodape.jsp" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/WebContent/WEB-INF/views/usuario.jsp" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/WebContent/WEB-INF/views/usuarioLogado.jsp" charset="ISO-8859-1" />
+  </component>
+</project>
