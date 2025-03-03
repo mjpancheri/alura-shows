@@ -5,6 +5,7 @@ import br.com.alura.owasp.model.Role;
 import br.com.alura.owasp.model.Usuario;
 import br.com.alura.owasp.model.dto.UsuarioDTO;
 import br.com.alura.owasp.retrofit.GoogleWebClient;
+import br.com.alura.owasp.validation.ImagemValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,8 @@ public class UsuarioController {
     private UsuarioDao dao;
     @Autowired
     private GoogleWebClient cliente;
+    @Autowired
+    private ImagemValidator imagemValidator;
 
     // alternativa para controlar os atributos de input do form, usando SpringMVC
     /*@InitBinder
@@ -61,13 +64,17 @@ public class UsuarioController {
                             Model model, HttpSession session) throws IllegalStateException, IOException {
 
         Usuario usuarioRegistro = usuarioDTO.montaUsuario();
-        tratarImagem(imagem, usuarioRegistro, request);
-        usuarioRegistro.getRoles().add(new Role("ROLE_USER"));
+        if (imagemValidator.validarImagem(imagem, usuarioRegistro, request)) {
+            usuarioRegistro.getRoles().add(new Role("ROLE_USER"));
 
-        dao.salva(usuarioRegistro);
-        session.setAttribute("usuario", usuarioRegistro);
-        model.addAttribute("usuario", usuarioRegistro);
-        return "usuarioLogado";
+            dao.salva(usuarioRegistro);
+            session.setAttribute("usuario", usuarioRegistro);
+            model.addAttribute("usuario", usuarioRegistro);
+            return "usuarioLogado";
+        }
+
+        redirect.addFlashAttribute("mensagem", "A imagem passada não é válida!");
+        return "redirect:/usuario";
     }
 
     @RequestMapping(value = "/trocarSenha", method = RequestMethod.POST)
@@ -136,12 +143,4 @@ public class UsuarioController {
         return "usuario";
     }
 
-    private void tratarImagem(MultipartFile imagem, Usuario usuario,
-                              HttpServletRequest request) throws IllegalStateException, IOException {
-        usuario.setNomeImagem(imagem.getOriginalFilename());
-        File arquivo = new File(request.getServletContext().getRealPath(
-                "/image"), usuario.getNomeImagem());
-        imagem.transferTo(arquivo);
-
-    }
 }
