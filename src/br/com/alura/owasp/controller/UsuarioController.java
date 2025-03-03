@@ -3,6 +3,7 @@ package br.com.alura.owasp.controller;
 import br.com.alura.owasp.dao.UsuarioDao;
 import br.com.alura.owasp.model.Role;
 import br.com.alura.owasp.model.Usuario;
+import br.com.alura.owasp.model.dto.UsuarioDTO;
 import br.com.alura.owasp.retrofit.GoogleWebClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,12 @@ public class UsuarioController {
     @Autowired
     private GoogleWebClient cliente;
 
+    // alternativa para controlar os atributos de input do form, usando SpringMVC
+    /*@InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.setAllowedFields("nome", "email", "senha", "nomeImagem");
+    }*/
+
     private static final String SITE_KEY = System.getenv("RECAPTCHA_SITE");
 
     @RequestMapping("/usuario")
@@ -49,10 +56,11 @@ public class UsuarioController {
 
     @RequestMapping(value = "/registrar", method = RequestMethod.POST)
     public String registrar(MultipartFile imagem,
-                            @ModelAttribute("usuarioRegistro") Usuario usuarioRegistro,
+                            @ModelAttribute("usuarioRegistro") UsuarioDTO usuarioDTO,
                             RedirectAttributes redirect, HttpServletRequest request,
                             Model model, HttpSession session) throws IllegalStateException, IOException {
 
+        Usuario usuarioRegistro = usuarioDTO.montaUsuario();
         tratarImagem(imagem, usuarioRegistro, request);
         usuarioRegistro.getRoles().add(new Role("ROLE_USER"));
 
@@ -62,9 +70,26 @@ public class UsuarioController {
         return "usuarioLogado";
     }
 
+    @RequestMapping(value = "/trocarSenha", method = RequestMethod.POST)
+    public String trocarSenha(@ModelAttribute("usuarioSenha") UsuarioDTO usuario,
+                              RedirectAttributes redirect, Model model, HttpSession session,
+                              HttpServletRequest request) throws IOException {
+
+        String recaptcha = request.getParameter("g-recaptcha-response");
+        String novaSenha = request.getParameter("novaSenha");
+
+        if (cliente.verifica(recaptcha)) {
+            return atualizarSenha(usuario, novaSenha, redirect, model, session);
+        }
+
+        redirect.addFlashAttribute("mensagem", "Por favor, comprove que você é humano!");
+        return "redirect:/usuario";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@ModelAttribute("usuario") Usuario usuario,
-                        RedirectAttributes redirect, Model model, HttpSession session, HttpServletRequest request) throws IOException {
+    public String login(@ModelAttribute("usuario") UsuarioDTO usuario,
+                        RedirectAttributes redirect, Model model, HttpSession session,
+                        HttpServletRequest request) throws IOException {
 
         String recaptcha = request.getParameter("g-recaptcha-response");
 
@@ -76,13 +101,30 @@ public class UsuarioController {
         return "redirect:/usuario";
     }
 
-    private String procurarUsuario(Usuario usuario, RedirectAttributes redirect, Model model, HttpSession session) {
+    private String procurarUsuario(UsuarioDTO usuario, RedirectAttributes redirect, Model model,
+                                   HttpSession session) {
         Usuario usuarioRetornado = dao.procuraUsuario(usuario);
         model.addAttribute("usuario", usuarioRetornado);
         if (usuarioRetornado == null) {
             redirect.addFlashAttribute("mensagem", "Usuário não encontrado");
             return "redirect:/usuario";
         }
+
+        session.setAttribute("usuario", usuarioRetornado);
+        return "usuarioLogado";
+    }
+
+    private String atualizarSenha(UsuarioDTO usuario, String novaSenha, RedirectAttributes redirect, Model model,
+                                  HttpSession session) {
+        Usuario usuarioRetornado = dao.procuraUsuario(usuario);
+        model.addAttribute("usuario", usuarioRetornado);
+        if (usuarioRetornado == null) {
+            redirect.addFlashAttribute("mensagem", "Usuário não encontrado");
+            return "redirect:/usuario";
+        }
+        // atualiza senha
+        usuarioRetornado.setSenha(novaSenha);
+        dao.salva(usuarioRetornado);
 
         session.setAttribute("usuario", usuarioRetornado);
         return "usuarioLogado";

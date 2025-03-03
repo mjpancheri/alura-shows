@@ -5,10 +5,13 @@
 			<div class="panel panel-login">
 				<div class="panel-heading">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-4">
 							<a href="#" class="active" id="login-form-link">Login</a>
 						</div>
-						<div class="col-xs-6">
+						<div class="col-xs-4">
+							<a href="#" id="changePassword-form-link">Trocar Senha</a>
+						</div>
+						<div class="col-xs-4">
 							<a href="#" id="register-form-link">Registrar</a>
 						</div>
 					</div>					
@@ -35,6 +38,31 @@
 											<input type="submit" name="login-submit" id="login-submit"
 												tabindex="4" class="form-control btn btn-login"
 												value="Log In">
+										</div>
+									</div>
+								</div>
+							</form>
+							<form id="changePassword-form" action="${s:mvcUrl('UC#trocarSenha').build()}"
+								method="post" role="form" style="display: none;">
+								<div class="form-group">
+									<input type="text" name="email" id="email" tabindex="1"
+										class="form-control" placeholder="E-mail" value="" required="required">
+								</div>
+								<div class="form-group">
+									<input type="password" name="senha" id="senha" tabindex="2"
+										class="form-control" placeholder="Senha Atual" required="required">
+								</div>
+								<div class="form-group">
+									<input type="password" name="novaSenha" id="novaSenha" tabindex="2"
+										class="form-control" placeholder="Nova Senha" required="required">
+								</div>
+								<div class="g-recaptcha" data-sitekey="${siteKey}"></div>
+								<div class="form-group" style="margin-top: 3%">
+									<div class="row">
+										<div class="col-sm-6 col-sm-offset-3">
+											<input type="submit" name="trocarSenha-submit" id="trocarSenha-submit"
+												tabindex="4" class="form-control btn btn-login"
+												value="Trocar Senha">
 										</div>
 									</div>
 								</div>

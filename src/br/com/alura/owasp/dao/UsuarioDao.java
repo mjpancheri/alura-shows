@@ -1,8 +1,11 @@
 package br.com.alura.owasp.dao;
 
 import br.com.alura.owasp.model.Usuario;
+import br.com.alura.owasp.model.dto.UsuarioDTO;
 
 public interface UsuarioDao {
-	public void salva(Usuario usuario);
-	public Usuario procuraUsuario(Usuario usuario);
+
+    void salva(Usuario usuario);
+
+    Usuario procuraUsuario(UsuarioDTO usuario);
 }
